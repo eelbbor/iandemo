@@ -1,88 +1,87 @@
-function IanGameControllerStart() {
-    var c = document.getElementById("game_canvas");
-    c.width=self.innerWidth - 50;
-    c.height=self.innerHeight - 50;
-    c.style.border="1px solid #000000";
+function IanGameControllerStart(centerX, centerY) {
+    var canvas = document.getElementById("game_canvas");
+    canvas.width=self.innerWidth - 50;
+    canvas.height=self.innerHeight - 50;
+    canvas.style.border="1px solid #000000";
+    DrawScull(canvas, centerX, centerY);
+}
 
-    var context = c.getContext("2d");
-//    context.moveTo(235, 0);
-//    context.lineTo(235, 250);
-//    context.lineWidth=1;
-//    context.strokeStyle='black';
-//    context.stroke();
-//
-//    context.moveTo(70, 100);
-//    context.lineTo(400, 100);
-//    context.stroke();
-//
-//    //mouth center
-//    context.moveTo(70, 180);
-//    context.lineTo(400, 180);
-//    context.stroke();
-//
-//    //nose bottom
-//    context.moveTo(70, 150);
-//    context.lineTo(400, 150);
-//    context.stroke();
-//
-//    context.moveTo(70, 150);
-//    context.lineTo(400, 150);
-//    context.stroke();
-//
-//    context.moveTo(210, 0);
-//    context.lineTo(210, 250);
-//    context.stroke();
-//
-//    context.moveTo(260, 0);
-//    context.lineTo(260, 250);
-//    context.stroke();
+function DrawScull(canvas, centerX, centerY) {
+    var context = canvas.getContext("2d");
 
+    centerX = centerX || canvas.width / 2;
+    centerY = centerY || canvas.height / 2;
+    
+    var width = 130;
+    var height = 240;
 
-    var scullCenterX = 235;
+    var leftBoundry = centerX - width/2;
+    var rightBoundry = leftBoundry + width;
+    var topBoundry = centerY - height/2;
+    var bottomBoundry = topBoundry + height;
+    
     // begin custom shape
     context.beginPath();
-    context.moveTo(170, 100);
+
     //top of head
-    context.bezierCurveTo(170, 20, 300, 20, 300, 100);
+    var originY = topBoundry + 80;
+    context.moveTo(leftBoundry, originY);
+    context.bezierCurveTo(leftBoundry, topBoundry, rightBoundry, topBoundry, rightBoundry, originY);
 
     //right cheekbone
-    context.bezierCurveTo(300, 100, 300, 125, 280, 150);
+    var cheekboneTop = originY + 25;
+    var cheekboneBottom = originY + 50;
+    var cheekboneWidth = 20;
+    context.bezierCurveTo(rightBoundry, originY, rightBoundry, cheekboneTop, rightBoundry - cheekboneWidth, cheekboneBottom);
+    
     //right jaw
-    context.bezierCurveTo(270, 160, 260, 150, 260, 200);
+    var jawXUpperOffset = 30;
+    var jawXLowerOffset = 40;
+
+    var jawTop = cheekboneBottom + 10;
+    var jawMid = cheekboneBottom;
+    var jawBottom = bottomBoundry - 60;
+    context.bezierCurveTo(rightBoundry - jawXUpperOffset, jawTop, rightBoundry - jawXLowerOffset, jawMid, rightBoundry - jawXLowerOffset, jawBottom);
 
     //left cheekbone
-    context.moveTo(170, 100);
-    context.bezierCurveTo(170, 100, 170, 125, 190, 150);
+    context.moveTo(leftBoundry, originY);
+    context.bezierCurveTo(leftBoundry, originY, leftBoundry, cheekboneTop, leftBoundry + cheekboneWidth, cheekboneBottom);
     //left jaw
-    context.bezierCurveTo(200, 160, 210, 150, 210, 200);
+    context.bezierCurveTo(leftBoundry + jawXUpperOffset, jawTop, leftBoundry + jawXLowerOffset, jawMid, leftBoundry + jawXLowerOffset, jawBottom);
 
     //chin
-    context.moveTo(210, 200);
-    context.bezierCurveTo(210, 220, 260, 220, 260, 200);
+    var chinXOffset = 40;
+    var chinBottom = bottomBoundry - 40;
+    context.bezierCurveTo(leftBoundry + chinXOffset, chinBottom, rightBoundry - chinXOffset, chinBottom, rightBoundry - chinXOffset, jawBottom);
 
     // complete custom shape
-    context.lineWidth = 5;
+    context.lineWidth = 4;
     context.stroke();
 
     // left eye
+    var eyeDiameter = 10;
+    var eyeXOffset = 25;
     context.beginPath();
-    context.arc(210, 100, 10, 0, 2 * Math.PI);
+    context.arc(centerX - eyeXOffset, originY, eyeDiameter, 0, 2 * Math.PI);
     context.fillStyle = 'black';
     context.fill();
     context.stroke();
 
-    // left eye
+    // right eye
     context.beginPath();
-    context.arc(260, 100, 10, 0, 2 * Math.PI);
+    context.arc(centerX + eyeXOffset, originY, eyeDiameter, 0, 2 * Math.PI);
     context.fillStyle = 'black';
     context.fill();
     context.stroke();
 
     //nose
     context.beginPath();
-    context.moveTo(235, 125);
-    context.lineTo(245, 145);
-    context.lineTo(225, 145);
+    var noseTop = centerY - 15;
+    var noseDim = 20;
+    var noseBottom = noseTop + noseDim;
+    context.moveTo(centerX, noseTop);
+    context.lineTo(centerX + noseDim/2, noseBottom);
+    context.lineTo(centerX - noseDim/2, noseBottom);
     context.fillStyle = 'black';
     context.fill();
     context.closePath();
@@ -90,10 +89,10 @@ function IanGameControllerStart() {
 
     //mouth
     context.beginPath();
-    var mouthCenterY = 180;
+    var mouthCenterY = centerY + 40;
     var mouthWidth = 40;
     var mouthHeight = 20;
-    var mouthLeft = scullCenterX - mouthWidth/2;
+    var mouthLeft = centerX - mouthWidth/2;
     var mouthRight = mouthLeft + mouthWidth;
     var mouthTop = mouthCenterY - mouthHeight/2;
     var mouthBottom = mouthTop + mouthHeight;
@@ -103,20 +102,19 @@ function IanGameControllerStart() {
     context.lineTo(mouthRight, mouthCenterY);
 
 
-    context.moveTo(scullCenterX, mouthTop);
-    context.lineTo(scullCenterX, mouthBottom);
+    context.moveTo(centerX, mouthTop);
+    context.lineTo(centerX, mouthBottom);
 
-    for(var i = mouthLeft + 5; i < scullCenterX; i = i + 5) {
+    for(var i = mouthLeft + 5; i < centerX; i = i + 5) {
         context.moveTo(i, mouthTop);
         context.lineTo(i, mouthBottom);
     }
 
-    for(var i = mouthRight - 5; i > scullCenterX; i = i - 5) {
+    for(var i = mouthRight - 5; i > centerX; i = i - 5) {
         context.moveTo(i, mouthTop);
         context.lineTo(i, mouthBottom);
     }
 
     context.lineWidth = 2;
     context.stroke();
-
 }
