@@ -1,16 +1,15 @@
-function IanGameControllerStart(centerX, centerY) {
-    var canvas = document.getElementById("game_canvas");
-    canvas.width=self.innerWidth - 50;
-    canvas.height=self.innerHeight - 50;
-    canvas.style.border="1px solid #000000";
-    DrawScull(canvas, centerX, centerY);
+function IanGameController(canvasID) {
+    this.canvas = document.getElementById(canvasID);
+        this.canvas.width=self.innerWidth - 50;
+        this.canvas.height=self.innerHeight - 50;
+        this.canvas.style.border="1px solid #000000";
 }
 
-function DrawScull(canvas, centerX, centerY) {
-    var context = canvas.getContext("2d");
+IanGameController.prototype.drawScull = function(centerX, centerY) {
+    var context = this.canvas.getContext("2d");
 
-    centerX = centerX || canvas.width / 2;
-    centerY = centerY || canvas.height / 2;
+    centerX = centerX || this.canvas.width / 2;
+    centerY = centerY || this.canvas.height / 2;
     
     var width = 130;
     var height = 240;
